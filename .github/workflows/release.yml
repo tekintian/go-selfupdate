@@ -116,39 +116,36 @@ jobs:
         id: release_notes
         run: |
           VERSION=${GITHUB_REF#refs/tags/v}
-          cat > $GITHUB_OUTPUT << EOF
-          notes=## What's Changed
 
-          See full changelog at https://github.com/${{ github.repository }}/commits/v${VERSION}
+          {
+            echo "notes<<EOF"
+            echo "## What's Changed"
+            echo ""
+            echo "See full changelog at https://github.com/${{ github.repository }}/commits/v${VERSION}"
+            echo ""
+            echo "### Downloads"
+            echo ""
+            echo "Select the binary for your platform:"
+            echo ""
 
-          ### Downloads
+            for file in dist/*/*; do
+              if [ -f "$file" ]; then
+                filename=$(basename "$file")
+                echo "- \`$filename\`"
+              fi
+            done
 
-          Select the binary for your platform:
-          EOF
-
-          echo "notes<<EOF" >> $GITHUB_OUTPUT
-          echo "" >> $GITHUB_OUTPUT
-
-          for file in dist/*/*; do
-            if [ -f "$file" ]; then
-              filename=$(basename "$file")
-              echo "- \`$filename\`" >> $GITHUB_OUTPUT
-            fi
-          done
-
-          echo "" >> $GITHUB_OUTPUT
-          echo "" >> $GITHUB_OUTPUT
-          echo "### Installation" >> $GITHUB_OUTPUT
-          echo "" >> $GITHUB_OUTPUT
-          echo "Download the binary for your platform and make it executable (Linux/macOS):" >> $GITHUB_OUTPUT
-          echo "" >> $GITHUB_OUTPUT
-          echo "\`\`\`bash" >> $GITHUB_OUTPUT
-          echo "chmod +x selfupdate-*" >> $GITHUB_OUTPUT
-          echo "mv selfupdate-* /usr/local/bin/selfupdate" >> $GITHUB_OUTPUT
-          echo "\`\`\`" >> $GITHUB_OUTPUT
-          echo "EOF" >> $GITHUB_OUTPUT
-        env:
-          GITHUB_OUTPUT: ${{ github.event_path }}
+            echo ""
+            echo "### Installation"
+            echo ""
+            echo "Download the binary for your platform and make it executable (Linux/macOS):"
+            echo ""
+            echo '```bash'
+            echo "chmod +x selfupdate-*"
+            echo "mv selfupdate-* /usr/local/bin/selfupdate"
+            echo '```'
+            echo "EOF"
+          } >> $GITHUB_OUTPUT
 
       - name: Create Release
         uses: softprops/action-gh-release@v1
