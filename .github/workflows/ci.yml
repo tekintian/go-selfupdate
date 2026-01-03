@@ -22,6 +22,7 @@ jobs:
           - os: ubuntu-latest
             goos: linux
             goarch: arm64
+            is_cross_compile: true
           - os: macos-latest
             goos: darwin
             goarch: amd64
@@ -53,10 +54,14 @@ jobs:
           GOOS: ${{ matrix.goos }}
           GOARCH: ${{ matrix.goarch }}
         run: |
-          # Only run race detection on native platforms (amd64)
-          if [ "${{ matrix.goarch }}" = "amd64" ]; then
+          if [ "${{ matrix.is_cross_compile }}" = "true" ]; then
+            # Cross-compile: only compile tests, don't run them
+            go test -c ./...
+          elif [ "${{ matrix.goarch }}" = "amd64" ]; then
+            # Native amd64: run with race detection
             go test -v -race -coverprofile=coverage.txt -covermode=atomic ./...
           else
+            # Native non-amd64: run tests without race detection
             go test -v ./...
           fi
 
