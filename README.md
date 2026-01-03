@@ -221,6 +221,29 @@ For complete update management solutions, consider:
 - Go 1.20 or higher
 - Single-file executable binaries
 
+## Platform Support
+
+| Platform | Status | Notes |
+|----------|--------|-------|
+| Linux (amd64) | ✅ Supported | Fully tested |
+| Linux (arm64) | ✅ Supported | Fully tested |
+| Linux (386, arm) | ⚠️ Should Work | Not actively tested |
+| macOS (amd64, arm64) | ✅ Supported | Fully tested, macOS 10.13+ |
+| Windows (amd64) | ✅ Supported | Fully tested |
+| Windows (386) | ⚠️ Should Work | Not actively tested |
+| FreeBSD | ✅ Supported | Via sysctl |
+| OpenBSD | ✅ Supported | Via /proc |
+| NetBSD | ✅ Supported | Via /proc |
+| DragonFlyBSD | ✅ Supported | Via /proc |
+| Plan 9 | ✅ Supported | Via /proc |
+| Solaris | ⚠️ Partial | May have compatibility issues |
+| AIX | ❌ Not Supported | Missing implementation |
+| Android | ❌ Not Supported | Missing implementation |
+| iOS | ❌ Not Supported | Missing implementation |
+| WebAssembly | ❌ Not Supported | Missing implementation |
+
+**Note**: "Not actively tested" means the code should work but hasn't been verified on CI. If you encounter issues on these platforms, please report them.
+
 ## License
 
 Apache License 2.0
