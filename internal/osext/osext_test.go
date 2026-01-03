@@ -69,11 +69,12 @@ func TestExecutableMatch(t *testing.T) {
 	cmd := &exec.Cmd{
 		Dir:  dir,
 		Path: fullpath,
-		Env: []string{
-			fmt.Sprintf("%s=%s", executableEnvVar, executableEnvValueMatch),
-			"GOCOVERDIR=", // Suppress coverage warnings in child process
-		},
 	}
+	// Set environment variables, suppressing coverage warnings in child process
+	cmd.Env = append(os.Environ(),
+		fmt.Sprintf("%s=%s", executableEnvVar, executableEnvValueMatch),
+		"GOCOVERDIR=", // Suppress coverage warnings in child process
+	)
 	out, err := cmd.CombinedOutput()
 	if err != nil {
 		t.Fatalf("exec(self) failed: %v", err)
@@ -100,15 +101,16 @@ func TestExecutableDelete(t *testing.T) {
 	stderrBuff := &bytes.Buffer{}
 	stdoutBuff := &bytes.Buffer{}
 	cmd := &exec.Cmd{
-		Path: fpath,
-		Env: []string{
-			fmt.Sprintf("%s=%s", executableEnvVar, executableEnvValueDelete),
-			"GOCOVERDIR=", // Suppress coverage warnings in child process
-		},
+		Path:   fpath,
 		Stdin:  r,
 		Stderr: stderrBuff,
 		Stdout: stdoutBuff,
 	}
+	// Set environment variables, suppressing coverage warnings in child process
+	cmd.Env = append(os.Environ(),
+		fmt.Sprintf("%s=%s", executableEnvVar, executableEnvValueDelete),
+		"GOCOVERDIR=", // Suppress coverage warnings in child process
+	)
 	err = cmd.Start()
 	if err != nil {
 		t.Fatalf("exec(self) start failed: %v", err)
