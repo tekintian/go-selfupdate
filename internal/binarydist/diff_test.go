@@ -36,6 +36,12 @@ func TestDiff(t *testing.T) {
 
 		t.Logf("diff %s %s: patch size = %d bytes", s.old.Name(), s.new.Name(), patch.Len())
 
+		// Reset old file pointer for reading (it was moved during Diff)
+		_, err = s.old.Seek(0, 0)
+		if err != nil {
+			t.Fatalf("Failed to seek old file: %v", err)
+		}
+
 		// Test round-trip: old + patch should = new
 		result := new(bytes.Buffer)
 		err = Patch(s.old, result, patch)

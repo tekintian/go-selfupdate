@@ -2,76 +2,58 @@ package binarydist
 
 import (
 	"bytes"
-	"os"
 	"testing"
 )
 
 func TestPatch(t *testing.T) {
-	old := mustWriteRandFile("test.old", 1e3)
-	new := mustWriteRandFile("test.new", 1e3)
+	oldFile := mustWriteRandFile("test.old", 1e3)
+	newFile := mustWriteRandFile("test.new", 1e3)
 
 	// Create a patch using our Diff function
-	patch := new(bytes.Buffer)
-	err := Diff(old, new, patch)
+	patchBuf := new(bytes.Buffer)
+	err := Diff(oldFile, newFile, patchBuf)
 	if err != nil {
 		panic(err)
 	}
 
 	// Reset old file for reading
-	_, err = old.Seek(0, 0)
+	_, err = oldFile.Seek(0, 0)
 	if err != nil {
 		panic(err)
 	}
 
 	// Apply the patch
-	result := new(bytes.Buffer)
-	err = Patch(old, result, patch)
+	resultBuf := new(bytes.Buffer)
+	err = Patch(oldFile, resultBuf, patchBuf)
 	if err != nil {
 		t.Fatal("Patch failed:", err)
 	}
 
 	// Verify result matches new
-	_, err = new.Seek(0, 0)
+	_, err = newFile.Seek(0, 0)
 	if err != nil {
 		panic(err)
 	}
-	newBytes := mustReadAll(new)
+	newBytes := mustReadAll(newFile)
 
-	if !bytes.Equal(result.Bytes(), newBytes) {
-		if n := matchlen(result.Bytes(), newBytes); n > -1 {
-			t.Fatalf("produced different output at pos %d", n)
-		} else {
-			t.Fatalf("produced different output")
-		}
+	if !bytes.Equal(resultBuf.Bytes(), newBytes) {
+		t.Fatalf("produced different output")
 	}
 
-	t.Logf("Patch successful: %d bytes", result.Len())
+	t.Logf("Patch successful: %d bytes", resultBuf.Len())
 }
 
 func TestPatchHk(t *testing.T) {
-	result := new(bytes.Buffer)
+	resultBuf := new(bytes.Buffer)
 
-	err := Patch(mustOpen("testdata/sample.old"), result, mustOpen("testdata/sample.patch"))
+	err := Patch(mustOpen("testdata/sample.old"), resultBuf, mustOpen("testdata/sample.patch"))
 	if err != nil {
 		t.Fatal(err)
 	}
 
-	t.Logf("got %d bytes", result.Len())
-	if n := fileCmpBytes(result.Bytes(), mustReadAll(mustOpen("testdata/sample.new"))); n > -1 {
-		t.Fatalf("produced different output at pos %d", n)
+	t.Logf("got %d bytes", resultBuf.Len())
+	expected := mustReadAll(mustOpen("testdata/sample.new"))
+	if !bytes.Equal(resultBuf.Bytes(), expected) {
+		t.Fatalf("produced different output")
 	}
-}
-
-// fileCmpBytes compares a byte slice with expected bytes
-func fileCmpBytes(a, b []byte) int64 {
-	if len(a) != len(b) {
-		return int64(len(a))
-	}
-
-	for i := range a {
-		if a[i] != b[i] {
-			return int64(i)
-		}
-	}
-	return -1
 }
