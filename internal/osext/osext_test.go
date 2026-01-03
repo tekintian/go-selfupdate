@@ -69,7 +69,10 @@ func TestExecutableMatch(t *testing.T) {
 	cmd := &exec.Cmd{
 		Dir:  dir,
 		Path: fullpath,
-		Env:  []string{fmt.Sprintf("%s=%s", executableEnvVar, executableEnvValueMatch)},
+		Env: []string{
+			fmt.Sprintf("%s=%s", executableEnvVar, executableEnvValueMatch),
+			"GOCOVERDIR=", // Suppress coverage warnings in child process
+		},
 	}
 	out, err := cmd.CombinedOutput()
 	if err != nil {
@@ -97,8 +100,11 @@ func TestExecutableDelete(t *testing.T) {
 	stderrBuff := &bytes.Buffer{}
 	stdoutBuff := &bytes.Buffer{}
 	cmd := &exec.Cmd{
-		Path:   fpath,
-		Env:    []string{fmt.Sprintf("%s=%s", executableEnvVar, executableEnvValueDelete)},
+		Path: fpath,
+		Env: []string{
+			fmt.Sprintf("%s=%s", executableEnvVar, executableEnvValueDelete),
+			"GOCOVERDIR=", // Suppress coverage warnings in child process
+		},
 		Stdin:  r,
 		Stderr: stderrBuff,
 		Stdout: stdoutBuff,
