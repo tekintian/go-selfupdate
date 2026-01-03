@@ -54,7 +54,7 @@ func TestExecutableFolder(t *testing.T) {
 }
 func TestExecutableMatch(t *testing.T) {
 	// 如果是在CI环境,跳过测试
-	if os.Getenv("CI") != "" {
+	if os.Getenv("CICD") != "" {
 		t.Skip("TestExecutableMatch skipped in CI")
 	}
 	ep, err := Executable()

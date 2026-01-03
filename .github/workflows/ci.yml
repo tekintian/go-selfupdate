@@ -54,6 +54,7 @@ jobs:
         env:
           GOOS: ${{ matrix.goos }}
           GOARCH: ${{ matrix.goarch }}
+          CICD: "GITHUB"
         run: |
           if [ "${{ matrix.is_cross_compile }}" = "true" ]; then
             # Cross-compile: only compile tests, don't run them
