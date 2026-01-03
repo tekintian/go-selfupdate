@@ -6,8 +6,7 @@ import (
 	"flag"
 	"fmt"
 	"log"
-
-	"github.com/tekintian/go-selfupdate"
+	// "github.com/tekintian/go-selfupdate" // 使用时取消注释
 )
 
 var (
