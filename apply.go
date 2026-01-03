@@ -65,7 +65,12 @@ func Apply(update io.Reader, opts Options) error {
 		opts.Verifier = NewECDSAVerifier()
 	}
 	if opts.TargetMode == 0 {
-		opts.TargetMode = 0755
+		// Try to preserve original file permissions
+		if info, err := os.Stat(opts.TargetPath); err == nil {
+			opts.TargetMode = info.Mode().Perm()
+		} else {
+			opts.TargetMode = 0755 // fallback
+		}
 	}
 
 	// get target path

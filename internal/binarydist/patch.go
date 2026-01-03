@@ -25,6 +25,18 @@ func Patch(old io.Reader, new io.Writer, patch io.Reader) error {
 		return ErrCorrupt
 	}
 
+	// Validate patch sizes to prevent memory exhaustion attacks
+	const maxPatchSize = 1 << 30 // 1GB limit
+	if hdr.CtrlLen > maxPatchSize {
+		return ErrCorrupt
+	}
+	if hdr.DiffLen > maxPatchSize {
+		return ErrCorrupt
+	}
+	if hdr.NewSize > maxPatchSize {
+		return ErrCorrupt
+	}
+
 	ctrlbuf := make([]byte, hdr.CtrlLen)
 	_, err = io.ReadFull(patch, ctrlbuf)
 	if err != nil {
