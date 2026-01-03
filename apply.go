@@ -119,7 +119,10 @@ func Apply(update io.Reader, opts Options) error {
 
 	// if we don't call fp.Close(), windows won't let us move the new executable
 	// because the file will still be "in use"
-	fp.Close()
+	err = fp.Close()
+	if err != nil {
+		return err
+	}
 
 	// this is where we'll move the executable to so that we can swap in the updated replacement
 	oldPath := opts.OldSavePath
@@ -243,7 +246,10 @@ func (o *Options) CheckPermissions() error {
 	if err != nil {
 		return err
 	}
-	fp.Close()
+	err = fp.Close()
+	if err != nil {
+		return err
+	}
 
 	_ = os.Remove(newPath)
 	return nil

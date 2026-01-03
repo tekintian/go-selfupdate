@@ -15,6 +15,8 @@ func (signMagLittleEndian) Uint32(b []byte) uint32 { panic("unimplemented") }
 func (signMagLittleEndian) PutUint32(b []byte, v uint32) { panic("unimplemented") }
 
 func (signMagLittleEndian) Uint64(b []byte) uint64 {
+	// bsdiff uses sign-magnitude encoding to represent signed 64-bit values
+	// We decode to int64 and return as uint64 (bitwise representation)
 	y := int64(b[0]) |
 		int64(b[1])<<8 |
 		int64(b[2])<<16 |
@@ -27,10 +29,13 @@ func (signMagLittleEndian) Uint64(b []byte) uint64 {
 	if b[7]&0x80 != 0 {
 		y = -y
 	}
-	return uint64(y)
+	// Return bitwise representation of int64 as uint64
+	return uint64(uint64(y))
 }
 
 func (signMagLittleEndian) PutUint64(b []byte, v uint64) {
+	// bsdiff uses sign-magnitude encoding, so we interpret uint64 as int64
+	// The value can represent both positive and negative int64 values
 	x := int64(v)
 	neg := x < 0
 	if neg {
