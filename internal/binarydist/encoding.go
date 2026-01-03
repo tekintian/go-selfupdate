@@ -31,7 +31,7 @@ func (signMagLittleEndian) Uint64(b []byte) uint64 {
 	}
 	// Return bitwise representation of int64 as uint64
 	// #nosec G115 - Required for bsdiff sign-magnitude encoding
-	return uint64(uint64(y))
+	return uint64(y)
 }
 
 func (signMagLittleEndian) PutUint64(b []byte, v uint64) {

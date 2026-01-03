@@ -54,7 +54,7 @@ func Apply(update io.Reader, opts Options) error {
 	case opts.Signature != nil:
 		return errors.New("no public key to verify signature with")
 	case opts.PublicKey != nil:
-		return errors.New("No signature to verify with")
+		return errors.New("no signature to verify with")
 	}
 
 	// set defaults

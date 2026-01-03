@@ -163,7 +163,7 @@ for more complete solutions.
 
 go-selfupdate only works for self-updating applications that are distributed as a single binary, i.e.
 applications that do not have additional assets or dependency files.
-Updating application that are distributed as mutliple on-disk files is out of scope, although this
+Updating applications that are distributed as multiple on-disk files is out of scope, although this
 may change in future versions of this library.
 */
 package selfupdate

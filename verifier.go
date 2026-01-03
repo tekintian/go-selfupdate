@@ -48,7 +48,7 @@ func NewECDSAVerifier() Verifier {
 			return err
 		}
 		if !ecdsa.Verify(key, checksum, rs.R, rs.S) {
-			return errors.New("failed to verify ecsda signature")
+			return errors.New("failed to verify ecdsa signature")
 		}
 		return nil
 	})
