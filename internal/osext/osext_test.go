@@ -49,6 +49,10 @@ func TestExecutableFolder(t *testing.T) {
 	}
 }
 func TestExecutableMatch(t *testing.T) {
+	if runtime.GOOS == "windows" {
+		t.Skip("TestExecutableMatch skipped on Windows due to shell execution limitations")
+	}
+
 	ep, err := Executable()
 	if err != nil {
 		t.Fatalf("Executable failed: %v", err)
