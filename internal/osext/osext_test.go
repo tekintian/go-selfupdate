@@ -53,8 +53,9 @@ func TestExecutableFolder(t *testing.T) {
 	}
 }
 func TestExecutableMatch(t *testing.T) {
-	if runtime.GOOS == "windows" {
-		t.Skip("TestExecutableMatch skipped on Windows due to shell execution limitations")
+	// 仅在macos平台测试
+	if runtime.GOOS != "darwin" {
+		t.Skip("TestExecutableMatch skipped on non-darwin platform")
 	}
 
 	ep, err := Executable()
