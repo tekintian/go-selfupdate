@@ -1,2 +1,32 @@
+# Test files
 test.new
 test.old
+*.patch
+
+# Build artifacts
+dist/
+*.exe
+*.test
+*.out
+
+# Coverage files
+coverage.txt
+coverage.html
+
+# Go workspace file
+go.work
+
+# IDE specific
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# OS specific
+.DS_Store
+Thumbs.db
+
+# Temporary files
+*.tmp
+*.log
