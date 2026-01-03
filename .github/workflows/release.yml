@@ -77,8 +77,14 @@ jobs:
             EXT=".exe"
           fi
 
+          # Set minimum macOS version to 10.13 (High Sierra)
+          LDFLAGS="-s -w -X main.version=$VERSION"
+          if [ "$GOOS" = "darwin" ]; then
+            LDFLAGS="$LDFLAGS -extldflags=-mmacosx-version-min=10.13"
+          fi
+
           go build -v \
-            -ldflags="-s -w -X main.version=$VERSION" \
+            -ldflags="$LDFLAGS" \
             -trimpath \
             -o dist/${{ matrix.artifact_name }}
 
