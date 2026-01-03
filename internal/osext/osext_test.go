@@ -15,6 +15,7 @@ import (
 	"os/exec"
 	"path/filepath"
 	"runtime"
+	"strings"
 	"testing"
 )
 
@@ -23,6 +24,9 @@ const (
 
 	executableEnvValueMatch  = "match"
 	executableEnvValueDelete = "delete"
+
+	// Coverage warning that may appear in child process output
+	coverageWarning = "warning: GOCOVERDIR not set, no coverage data emitted\n"
 )
 
 func TestPrintExecutable(t *testing.T) {
@@ -88,6 +92,11 @@ func TestExecutableMatch(t *testing.T) {
 	}
 }
 
+// stripCoverageWarning removes GOCOVERDIR warning from output if present
+func stripCoverageWarning(s string) string {
+	return strings.ReplaceAll(s, coverageWarning, "")
+}
+
 func TestExecutableDelete(t *testing.T) {
 	if runtime.GOOS != "linux" {
 		t.Skip()
@@ -143,7 +152,7 @@ func TestExecutableDelete(t *testing.T) {
 		t.Fatalf("exec wait failed: %v", err)
 	}
 
-	childPath := stderrBuff.String()
+	childPath := stripCoverageWarning(stderrBuff.String())
 	if !filepath.IsAbs(childPath) {
 		t.Fatalf("Child returned %q, want an absolute path", childPath)
 	}
