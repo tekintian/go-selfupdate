@@ -53,10 +53,10 @@ func TestExecutableFolder(t *testing.T) {
 	}
 }
 func TestExecutableMatch(t *testing.T) {
-	// @TODO skip this test IN CI
-	t.Skip("TestExecutableMatch skipped in CI")
-	// 仅在macos平台测试
-
+	// 如果是在CI环境,跳过测试
+	if os.Getenv("CI") != "" {
+		t.Skip("TestExecutableMatch skipped in CI")
+	}
 	ep, err := Executable()
 	if err != nil {
 		t.Fatalf("Executable failed: %v", err)
