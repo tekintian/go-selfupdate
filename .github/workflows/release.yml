@@ -58,9 +58,11 @@ jobs:
         run: go mod download
 
       - name: Run tests
+        shell: bash
         run: go test -v ./...
 
       - name: Build binary
+        shell: bash
         env:
           GOOS: ${{ matrix.goos }}
           GOARCH: ${{ matrix.goarch }}
@@ -110,6 +112,7 @@ jobs:
         run: ls -R dist
 
       - name: Generate release notes
+        shell: bash
         id: release_notes
         run: |
           VERSION=${GITHUB_REF#refs/tags/v}
